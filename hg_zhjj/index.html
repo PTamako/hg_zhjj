@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>南京海关智慧纪检数字化看板</title>
+    <script src="js/jquery-3.6.1.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <script src="js/jiangsu.js"></script>
+    <script src="js/tooltipScroll.js"></script>
+    <!-- <script src="js/vue-seamless-scroll.min.js"></script> -->
+    <script src="js/axios.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="head">
+      <span id="showTime"></span>
+      <script>
+        var t = null;
+        t = setTimeout(time, 20);
+        function checkTime(v) {
+          if (v < 10) {
+            v = "0" + v;
+          }
+          return v;
+        }
+        function time() {
+          clearTimeout(t);
+          var weekDays = [
+            "星期日",
+            "星期一",
+            "星期二",
+            "星期三",
+            "星期四",
+            "星期五",
+            "星期六",
+          ];
+          dt = new Date();
+          var y = dt.getFullYear();
+          var mt = dt.getMonth() + 1;
+          var day = dt.getDate();
+          var h = checkTime(dt.getHours());
+          var m = checkTime(dt.getMinutes());
+          var s = checkTime(dt.getSeconds());
+          var weekDay = weekDays[dt.getDay()];
+          document.getElementById("showTime").innerHTML =
+            y +
+            "年&nbsp;" +
+            mt +
+            "月" +
+            day +
+            "日&nbsp;" +
+            weekDay +
+            "&emsp;" +
+            h +
+            ":" +
+            m +
+            ":" +
+            s;
+          t = setTimeout(time, 20); //设定定时器，循环运行
+        }
+      </script>
+    </div>
+    <div class="main_box" id="main">
+      <ul class="clearfix">
+        <li>
+          <div class="box_all">
+            <div class="alltit">
+              <a href="./searchCon.html" target="_blank">监督管理</a>
+            </div>
+            <div class="container01" style="height: 4.05rem">
+              <div class="top">
+                <div class="img">
+                  <img src="images/icon01.png" alt="" />
+                </div>
+                <ul class="text">
+                  <li>
+                    <i></i>
+                    <div class="txt">
+                      <p>政治监督</p>
+                      <span>168</span>
+                    </div>
+                  </li>
+                  <li>
+                    <i></i>
+                    <div class="txt">
+                      <p>专项监督</p>
+                      <span>120</span>
+                    </div>
+                  </li>
+                  <li>
+                    <i></i>
+                    <div class="txt">
+                      <p>日常监督</p>
+                      <span>98</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <ul class="bottom">
+                <li>
+                  <div class="text">
+                    <h5>检查情况</h5>
+                    <p>852</p>
+                  </div>
+                  <div class="icon"><img src="images/icon02.png" alt="" /></div>
+                </li>
+                <li>
+                  <div class="text">
+                    <h5>发现问题</h5>
+                    <p>680</p>
+                  </div>
+                  <div class="icon"><img src="images/icon02.png" alt="" /></div>
+                </li>
+                <li>
+                  <div class="text">
+                    <h5>处置情况</h5>
+                    <p>368</p>
+                  </div>
+                  <div class="icon"><img src="images/icon02.png" alt="" /></div>
+                </li>
+                <li>
+                  <div class="text">
+                    <h5>监督报告</h5>
+                    <p>496</p>
+                  </div>
+                  <div class="icon"><img src="images/icon02.png" alt="" /></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="box_all" style="margin-top: 0.2rem">
+            <div class="alltit">
+              <a href="./searchCon.html" target="_blank">关区纪检工作交流</a>
+            </div>
+            <div class="table">
+              <div
+                class="scrollDiv"
+                @click="goDetail($event)"
+                style="height: 3.42rem; overflow: hidden"
+              >
+                <!-- <vue-seamless-scroll
+                  :data="itemSsbgd"
+                  :class-option="options"
+                  style="height: 3.5rem; overflow: hidden"
+                > -->
+                <ul class="smjl">
+                  <li v-for="item in itemSsbgd">
+                    <span class="px160">{{item.title}}</span
+                    ><span class="px40">{{item.time}}</span>
+                  </li>
+                </ul>
+                <!-- </vue-seamless-scroll> -->
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <h5>
+            尊敬的<span>XXX</span>用户，您有待办任务<span class="num">5</span
+            >条，未读消息<span class="num">12</span>条！
+          </h5>
+          <div class="map">
+            <div id="map" style="width: 100%; height: 7rem"></div>
+          </div>
+          <ul class="link">
+            <li>
+              <div class="img">
+                <img src="images/iconL01.png" alt="" />
+              </div>
+              <p>监督日志</p>
+            </li>
+            <li>
+              <div class="img">
+                <img src="images/iconL01.png" alt="" />
+              </div>
+              <p>监督报告</p>
+            </li>
+            <li>
+              <div class="img">
+                <img src="images/iconL03.png" alt="" />
+              </div>
+              <p>工作考核</p>
+            </li>
+            <li>
+              <div class="img">
+                <img src="images/iconL01.png" alt="" />
+              </div>
+              <p>监督建议书</p>
+            </li>
+            <li>
+              <div class="img">
+                <img src="images/iconL05.png" alt="" />
+              </div>
+              <p>第一种形态</p>
+            </li>
+            <li>
+              <div class="img">
+                <img src="images/iconL06.png" alt="" />
+              </div>
+              <p>人员去向</p>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <div class="box_all">
+            <div class="alltit">
+              <a href="./searchCon.html" target="_blank">党委纪检组工作动态</a>
+            </div>
+            <ul class="tab">
+              <li
+                v-for="(tab, index) in tabs"
+                :class="{active:index == nowIndex}"
+                @mouseenter="tabToggle(index,'nowIndex')"
+              >
+                {{ tab }}
+              </li>
+            </ul>
+            <div class="table" v-show="nowIndex === 0">
+              <div
+                class="scrollDiv"
+                @click="goDetail($event)"
+                style="height: 3.42rem; overflow: hidden"
+              >
+                <ul class="smjl">
+                  <li v-for="item in itemSsbgd">
+                    <span class="px160">{{item.title}}</span
+                    ><span class="px40">{{item.time}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="table" v-show="nowIndex === 1">
+              <div
+                class="scrollDiv"
+                @click="goDetail($event)"
+                style="height: 3.42rem; overflow: hidden"
+              >
+                <ul class="smjl">
+                  <li v-for="item in itemSsbgd">
+                    <span class="px160">{{item.title}}</span
+                    ><span class="px40">{{item.time}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="table" v-show="nowIndex === 2">
+              <div
+                class="scrollDiv"
+                @click="goDetail($event)"
+                style="height: 3.42rem; overflow: hidden"
+              >
+                <ul class="smjl">
+                  <li v-for="item in itemSsbgd">
+                    <span class="px160">{{item.title}}</span
+                    ><span class="px40">{{item.time}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="table" v-show="nowIndex === 3">
+              <div
+                class="scrollDiv"
+                @click="goDetail($event)"
+                style="height: 3.42rem; overflow: hidden"
+              >
+                <ul class="smjl">
+                  <li v-for="item in itemSsbgd">
+                    <span class="px160">{{item.title}}</span
+                    ><span class="px40">{{item.time}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="box_all" style="margin-top: 0.1rem">
+            <div class="alltit">
+              <a href="./searchCon.html" target="_blank">宁关纪学习</a>
+            </div>
+            <ul class="tab">
+              <li
+                v-for="(tab, index) in tabs2"
+                :class="{active:index == nowIndex2}"
+                @mouseenter="tabToggle(index,'nowIndex2')"
+              >
+                {{ tab }}
+              </li>
+            </ul>
+            <div class="table" v-show="nowIndex2 === 0">
+              <div
+                class="scrollDiv"
+                @click="goDetail($event)"
+                style="height: 3rem; overflow: hidden"
+              >
+                <ul class="smjl">
+                  <li v-for="item in itemSsbgd">
+                    <span class="px160">{{item.title}}</span
+                    ><span class="px40">{{item.time}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="table" v-show="nowIndex2 === 1">
+              <div
+                class="scrollDiv"
+                @click="goDetail($event)"
+                style="height: 3rem; overflow: hidden"
+              >
+                <ul class="smjl">
+                  <li v-for="item in itemSsbgd">
+                    <span class="px160">{{item.title}}</span
+                    ><span class="px40">{{item.time}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="table" v-show="nowIndex2 === 2">
+              <div
+                class="scrollDiv"
+                @click="goDetail($event)"
+                style="height: 3rem; overflow: hidden"
+              >
+                <ul class="smjl">
+                  <li v-for="item in itemSsbgd">
+                    <span class="px160">{{item.title}}</span
+                    ><span class="px40">{{item.time}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="table" v-show="nowIndex2 === 3">
+              <div
+                class="scrollDiv"
+                @click="goDetail($event)"
+                style="height: 3rem; overflow: hidden"
+              >
+                <ul class="smjl">
+                  <li v-for="item in itemSsbgd">
+                    <span class="px160">{{item.title}}</span
+                    ><span class="px40">{{item.time}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <script src="js/index.js"></script>
+  </body>
+</html>
